@@ -40,8 +40,11 @@ struct EditProfileView: View {
                     Divider()
                     
                     Toggle("Private profile", isOn: $isPrivateProfile)
-                } 
+                }
                 .font(.footnote)
+                .padding()
+                .background(.white)
+                .cornerRadius(8)
                 .padding()
             }
             .navigationTitle("Edit Profile")

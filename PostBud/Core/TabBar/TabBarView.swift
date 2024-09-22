@@ -8,6 +8,7 @@ import SwiftUI
 
 struct TabBarView: View { 
     @State private var selectedTab = 0;
+    @State private var showCreateView = false
     var body: some View {
         TabView(selection: $selectedTab){
             FeedView()
@@ -23,7 +24,7 @@ struct TabBarView: View {
                 }
                 .onAppear{ selectedTab = 1 }
                 .tag(1)
-            UploadView()
+            Text("")
                 .tabItem {
                     Image(systemName: "plus")
                 }
@@ -44,6 +45,10 @@ struct TabBarView: View {
                 .onAppear{ selectedTab = 4 }
                 .tag(4)
         }
+        .onChange(of: selectedTab, perform: { newValue in
+            showCreateView = selectedTab == 2
+        })
+        .sheet(isPresented: $showCreateView, onDismiss: { selectedTab == 0 }, content: { UploadView() })
         .tint(.black)
     }
 }
