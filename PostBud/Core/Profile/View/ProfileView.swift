@@ -15,72 +15,84 @@ struct ProfileView: View {
         return UIScreen.main.bounds.width / count - 16
     }
     var body: some View {
-        ScrollView(showsIndicators: false) {
-            VStack(spacing: 20) {
-                HStack(alignment: .top) {
-                    VStack(alignment: .leading, spacing: 12){
-                        VStack(alignment: .leading, spacing: 4){
-                            Text("Full Name")
-                                .font(.title2)
-                                .fontWeight(.semibold)
-                            Text("User Name")
-                                .font(.subheadline)
-                        }
-                        Text("Description")
-                            .font(.footnote)
-                        Text("Follower count")
-                            .font(.caption)
-                            .foregroundColor(.gray)
-                    }
-                    Spacer()
-                    ProfileImageView()
-                }
-                .padding(.horizontal)
-                
-                Button {
-                    
-                } label: {
-                    Text("Follow")
-                        .font(.subheadline)
-                        .fontWeight(.semibold)
-                        .frame(width: 350, height: 40)
-                        .foregroundColor(.white)
-                        .background(.black)
-                        .cornerRadius(4)
-                }
-                VStack{
-                    HStack{
-                        ForEach(ProfileFilter.allCases){ filter in
-                            VStack{
-                                Text(filter.title)
+        NavigationStack{
+            ScrollView(showsIndicators: false) {
+                VStack(spacing: 20) {
+                    HStack(alignment: .top) {
+                        VStack(alignment: .leading, spacing: 12){
+                            VStack(alignment: .leading, spacing: 4){
+                                Text("Full Name")
+                                    .font(.title2)
+                                    .fontWeight(.semibold)
+                                Text("User Name")
                                     .font(.subheadline)
-                                    .fontWeight(selectedFilter == filter ? .semibold : .regular)
-                                
-                                if selectedFilter == filter {
-                                    Rectangle()
-                                        .foregroundColor(.black)
-                                        .frame(width: filterBarWidth, height: 1)
-                                        .matchedGeometryEffect(id: "item", in: animation)
-                                } else {
-                                    Rectangle()
-                                        .foregroundColor(.clear)
-                                        .frame(width: filterBarWidth, height: 1)
-                                }
                             }
-                            .onTapGesture {
-                                withAnimation(.spring()){
-                                    selectedFilter = filter
+                            Text("Description")
+                                .font(.footnote)
+                            Text("Follower count")
+                                .font(.caption)
+                                .foregroundColor(.gray)
+                        }
+                        Spacer()
+                        ProfileImageView()
+                    }
+                    .padding()
+                    
+                    Button {
+                        
+                    } label: {
+                        Text("Follow")
+                            .font(.subheadline)
+                            .fontWeight(.semibold)
+                            .frame(width: 350, height: 40)
+                            .foregroundColor(.white)
+                            .background(.black)
+                            .cornerRadius(4)
+                    }
+                    VStack{
+                        HStack{
+                            ForEach(ProfileFilter.allCases){ filter in
+                                VStack{
+                                    Text(filter.title)
+                                        .font(.subheadline)
+                                        .fontWeight(selectedFilter == filter ? .semibold : .regular)
+                                    
+                                    if selectedFilter == filter {
+                                        Rectangle()
+                                            .foregroundColor(.black)
+                                            .frame(width: filterBarWidth, height: 1)
+                                            .matchedGeometryEffect(id: "item", in: animation)
+                                    } else {
+                                        Rectangle()
+                                            .foregroundColor(.clear)
+                                            .frame(width: filterBarWidth, height: 1)
+                                    }
+                                }
+                                .onTapGesture {
+                                    withAnimation(.spring()){
+                                        selectedFilter = filter
+                                    }
                                 }
                             }
                         }
-                    }
-                    LazyVStack{
-                        ForEach(0 ... 10, id: \.self){ thread in
-                            ThreadCell()
+                        LazyVStack{
+                            ForEach(0 ... 10, id: \.self){ thread in
+                                ThreadCell()
+                            }
                         }
                     }
+                    .toolbar{
+                        ToolbarItem(placement: .navigationBarTrailing) {
+                            Button {
+                                AuthService.shared.signOut()
+                            } label: {
+                                Image(systemName: "rectangle.portrait.and.arrow.right")
+                                    .foregroundColor(.black)
+                            }
+                        }
+                    }
+                    .padding(.vertical)
                 }
-                .padding(.vertical)
             }
         }
     }
