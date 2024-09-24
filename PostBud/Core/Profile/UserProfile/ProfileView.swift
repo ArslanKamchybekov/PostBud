@@ -9,23 +9,35 @@ import SwiftUI
 
 struct ProfileView: View {
     let user: User
+    @State private var isFollowing = false
     
     var body: some View {
         ScrollView(showsIndicators: false) {
             VStack(spacing: 20) {
                 ProfileHeaderView(user: user)
                 Button {
-                    
+                    if isFollowing { isFollowing = false }
+                    else { isFollowing = true }
                 } label: {
-                    Text("Follow")
-                        .font(.subheadline)
-                        .fontWeight(.semibold)
-                        .frame(width: 350, height: 40)
-                        .foregroundColor(.white)
-                        .background(.black)
-                        .cornerRadius(8`)
+                    if !isFollowing {
+                        Text("Follow")
+                            .font(.subheadline)
+                            .fontWeight(.semibold)
+                            .frame(width: 350, height: 40)
+                            .foregroundColor(.white)
+                            .background(.black)
+                            .cornerRadius(8)
+                    } else {
+                        Text("Following")
+                            .font(.subheadline)
+                            .fontWeight(.semibold)
+                            .frame(width: 350, height: 40)
+                            .foregroundColor(.black)
+                            .background(Color(.systemGray5))
+                            .cornerRadius(8)
+                    }
                 }
-                UserContentListView()
+                UserContentListView(user: user)
             }
         }
     }

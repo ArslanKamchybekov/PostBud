@@ -6,19 +6,21 @@
 //
 
 import SwiftUI
+import FirebaseCore
 
 struct ThreadCell: View {
+    let thread: Thread
     var body: some View {
         VStack{
             HStack(alignment: .top, spacing: 12) {
-                ProfileImageView()
+                ProfileImageView(user: thread.user)
                 VStack(alignment: .leading, spacing: 4){
                     HStack {
-                        Text("Sample")
+                        Text(thread.user?.username ?? "" )
                             .font(.footnote)
                             .fontWeight(.semibold)
                         Spacer()
-                        Text("10m")
+                        Text(thread.timestamp.timestampString())
                             .font(.caption)
                             .foregroundColor(Color(.systemGray3))
                         Button {
@@ -28,7 +30,7 @@ struct ThreadCell: View {
                                 .foregroundColor(.black)
                         }
                     }
-                    Text("Post")
+                    Text(thread.caption)
                         .font(.footnote)
                         .multilineTextAlignment(.leading)
                     HStack(spacing: 16){
@@ -64,5 +66,5 @@ struct ThreadCell: View {
 }
 
 #Preview {
-    ThreadCell()
+    ThreadCell(thread: Thread(ownerId: "1", caption: "Test thread", timestamp: Timestamp(), likes: 0))
 }

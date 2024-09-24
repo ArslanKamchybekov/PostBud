@@ -8,8 +8,49 @@
 import SwiftUI
 
 struct CurrentUserProfileView: View {
+    @State private var showEditProfile = false
+    @StateObject var viewModel = CurrentUserProfileViewModel()
+
+    private var currentUser: User? {
+        return viewModel.currentUser
+    }
     var body: some View {
-        Text(/*@START_MENU_TOKEN@*/"Hello, World!"/*@END_MENU_TOKEN@*/)
+        NavigationStack{
+            ScrollView(showsIndicators: false) {
+                VStack(spacing: 20) {
+                    ProfileHeaderView(user: currentUser)
+                    Button {
+                        showEditProfile.toggle()
+                    } label: {
+                        Text("Edit Profile")
+                            .font(.subheadline)
+                            .fontWeight(.semibold)
+                            .frame(width: 350, height: 40)
+                            .foregroundColor(.white)
+                            .background(.black)
+                            .cornerRadius(8)
+                    }
+                    if let user = currentUser {
+                        UserContentListView(user: user)
+                    }
+                }
+            }
+            .sheet(isPresented: $showEditProfile, content: {
+                if let user = currentUser {
+                    EditProfileView(user: user)
+                }
+            })
+            .toolbar{
+                ToolbarItem(placement: .navigationBarTrailing) {
+                    Button {
+                        AuthService.shared.signOut()
+                    } label: {
+                        Image(systemName: "rectangle.portrait.and.arrow.right")
+                            .foregroundColor(.black)
+                    }
+                }
+            }
+        }
     }
 }
 

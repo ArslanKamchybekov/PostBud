@@ -8,22 +8,18 @@
 import SwiftUI
 
 struct UserCell: View {
+    let user: User
     var body: some View {
         HStack{
-            ProfileImageView()
-            VStack(alignment: .leading){
-                Text("User User")
+            ProfileImageView(user: user)
+            VStack(alignment: .leading, spacing: 4){
+                Text(user.username)
                     .fontWeight(.semibold)
-                Text("User")
+                Text(user.fullname)
             }
             .font(.footnote)
             
             Spacer()
-            
-            Text("Follow")
-                .font(.subheadline)
-                .fontWeight(.semibold)
-                .padding(.horizontal)
             
         }
         .padding(.horizontal)
@@ -31,5 +27,5 @@ struct UserCell: View {
 }
 
 #Preview {
-    UserCell()
+    UserCell(user: User(id: NSUUID().uuidString, fullname: "Max Verstappen", username: "max_verstappen", email: "max@gmail.com"))
 }

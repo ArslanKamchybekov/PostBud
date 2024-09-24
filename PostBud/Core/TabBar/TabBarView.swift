@@ -37,7 +37,7 @@ struct TabBarView: View {
                 }
                 .onAppear{ selectedTab = 3 }
                 .tag(3)
-            ProfileView()
+            CurrentUserProfileView()
                 .tabItem {
                     Image(systemName: selectedTab == 4 ? "person.fill" : "person")
                         .environment(\.symbolVariants, selectedTab == 4 ? .fill : .none)
@@ -48,7 +48,8 @@ struct TabBarView: View {
         .onChange(of: selectedTab, perform: { newValue in
             showCreateView = selectedTab == 2
         })
-        .sheet(isPresented: $showCreateView, onDismiss: { selectedTab == 0 }, content: { UploadView() })
+        .sheet(isPresented: $showCreateView, onDismiss: { selectedTab == 1 }, content: { UploadView()
+        })
         .tint(.black)
     }
 }

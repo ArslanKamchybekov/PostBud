@@ -6,11 +6,17 @@
 //
 
 import SwiftUI
+import PhotosUI
 
 struct EditProfileView: View {
+    let user: User
+    
     @State private var bio = "";
     @State private var link = "";
     @State private var isPrivateProfile = false;
+    @StateObject var viewModel = EditProfileViewModel()
+    @Environment(\.dismiss) var dismiss
+    
     var body: some View {
         NavigationStack{
             ZStack{
@@ -19,11 +25,21 @@ struct EditProfileView: View {
                     HStack{
                         VStack(alignment: .leading){
                             Text("Name").fontWeight(.semibold)
-                            Text("Sample name")
+                            Text(user.fullname)
                         }
                         .font(.footnote)
                         Spacer()
-                        ProfileImageView()
+                        PhotosPicker(selection: $viewModel.selectedItem) {
+                            if let image = viewModel.profileImage {
+                                image
+                                    .resizable()
+                                    .scaledToFill()
+                                    .frame(width: 40, height: 40)
+                                    .clipShape(Circle())
+                            } else {
+                                ProfileImageView(user: user)
+                            }
+                        }
                     }
                     Divider()
                     VStack(alignment: .leading){
@@ -52,12 +68,15 @@ struct EditProfileView: View {
             .toolbar{
                 ToolbarItem(placement: .navigationBarLeading) {
                     Button("Cancel"){
-                        
+                        dismiss()
                     }
                 }
                 ToolbarItem(placement: .navigationBarTrailing) {
                     Button("Done"){
-                        
+                        Task {
+                            try await viewModel.updateUserData()
+                            dismiss()
+                        }
                     }
                     .fontWeight(.semibold)
                 }
@@ -68,5 +87,5 @@ struct EditProfileView: View {
 }
 
 #Preview {
-    EditProfileView()
+    EditProfileView(user: User(id: NSUUID().uuidString, fullname: "Max Verstappen", username: "max_verstappen", email: "max@gmail.com"))
 }

@@ -8,8 +8,13 @@
 import SwiftUI
 
 struct UserContentListView: View {
+    @StateObject var viewModel: UserContentListViewModel
     @State private var selectedFilter: ProfileFilter = .posts
     @Namespace private var animation
+    
+    init(user: User){
+        self._viewModel = StateObject(wrappedValue: UserContentListViewModel(user: user))
+    }
     
     private var filterBarWidth: CGFloat {
         let count = CGFloat(ProfileFilter.allCases.count)
@@ -44,8 +49,14 @@ struct UserContentListView: View {
                 }
             }
             LazyVStack{
-                ForEach(0 ... 10, id: \.self){ thread in
-                    //ThreadCell()
+                if viewModel.threads.count == 0 {
+                    Text("No posts yet...")
+                        .padding()
+                        .foregroundColor(.gray)
+                } else{
+                    ForEach(viewModel.threads){ thread in
+                        ThreadCell(thread: thread )
+                    }
                 }
             }
         }
@@ -54,5 +65,5 @@ struct UserContentListView: View {
 }
 
 #Preview {
-    UserContentListView()
+    UserContentListView(user: User(id: NSUUID().uuidString, fullname: "Max Verstappen", username: "max_verstappen", email: "max@gmail.com"))
 }
