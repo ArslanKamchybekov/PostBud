@@ -34,7 +34,6 @@ struct ProfileView: View {
                             .frame(width: 350, height: 40)
                             .foregroundColor(.black)
                             .background(Color(.systemGray5))
-                            .cornerRadius(8)
                     }
                 }
                 UserContentListView(user: user)
